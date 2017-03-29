@@ -1,8 +1,10 @@
 var ship;
+var asteroids = [];
 
 function setup() {
 	createCanvas(windowWidth, windowHeight);
   ship = new Ship();
+  asteroids.push(new Asteroid());
 }
 
 function draw() {
@@ -10,6 +12,11 @@ function draw() {
   ship.render();
   ship.turn();
   ship.update();
+  ship.edges();
+  
+  for (var i = 0; i < asteroids.length; i++) {
+    asteroids[i].render();
+  }
 }
 
 function keyReleased() {
@@ -26,47 +33,3 @@ function keyPressed() {
     ship.boosting(true);
   }
 }
-
-function Ship() {
-	this.pos = createVector(width / 2, height / 2)
-  this.r = 20;
-  this.heading = 0;
-  this.rotation = 0,
-  this.vel = createVector(0, 0); 
-  this.isBoosting = false;
-  
-  this.boosting = function(b) {
-    this.isBoosting = b;
-  }
-  
-  this.update = function() {
-    if (this.isBoosting) {
-      this.boost();
-    }
-    this.pos.add(this.vel);
-    this.vel.mult(0.99);
-  }
-  
-  this.boost = function() {
-    var force = p5.Vector.fromAngle(this.heading);
-    force.mult(0.1);
-    this.vel.add(force);
-  }
-  
-  this.render = function() {
-    translate(this.pos.x, this.pos.y);
-    rotate(this.heading + PI / 2);
-    noFill();
-    stroke(255);
-    triangle(-this.r, this.r, this.r, this.r, 0, -this.r);
-  }
-  
-  this.setRotation = function(a) {
-    this.rotation = a;
-  }
-  
-  this.turn = function() {
-    this.heading += this.rotation;
-  }
-  
-}  
